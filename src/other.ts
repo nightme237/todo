@@ -1,8 +1,8 @@
 // clearing store
-import { setData } from "./data";
+import { setData, Data } from "./data";
 
 export function clearData() {
-    let data = {
+    let data: Data = {
         projects: [],
         counter:
         {

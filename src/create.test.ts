@@ -4,8 +4,8 @@ import { clearData } from './other';
 
 import request from 'sync-request';
 
-let projectId1;
-let checklistId1;
+let projectId1: number;
+let checklistId1: number;
 
 describe('Testing createProject', () => {
 
