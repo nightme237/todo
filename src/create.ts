@@ -2,6 +2,9 @@ import { getData, setData } from './data';
 import { Project, Checklist, Todo } from './data';
 
 export function createProject(name: string) {
+    if (name.length < 1 || name.length > 20) {
+        return { error: "name is too long or too short"};
+    }
     let store = getData();
     const project: Project = 
     {
@@ -18,6 +21,9 @@ export function createProject(name: string) {
 }
 
 export function createChecklist(projectId: number, name: string) {
+    if (name.length < 1 || name.length > 20) {
+        return { error: "name is too long or too short"};
+    }
     let store = getData();
     const checklist: Checklist = 
     {
@@ -28,12 +34,16 @@ export function createChecklist(projectId: number, name: string) {
 
     store.counter.checklist++;
 
+    let projectFound = false;
+
     for (const project of store.projects) {
         if (project.projectId === projectId) {
             project.projectChecklists.push(checklist);
+            projectFound = true;
         }
     }
 
+    if (!projectFound) return { error: "project not found"};
     setData(store);
 
     return { checklistId: checklist.checklistId };
@@ -50,14 +60,17 @@ export function createTodo(checklistId: number, task: string) {
 
     store.counter.todo++;
 
+    let checklistFound = false;
     for (const project of store.projects) {
         for (const checklist of project.projectChecklists) {
             if (checklist.checklistId === checklistId) {
                 checklist.checklistTodos.push(todo);
+                checklistFound = true;
             }
         }
     }
 
+    if (!checklistFound) return { error: "checklist not found" };
     setData(store);
 
     return { todoId: todo.todoId };
