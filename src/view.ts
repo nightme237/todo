@@ -15,3 +15,8 @@ export function viewProject(projectId: number) {
 
     return { error: 'Project not found!' };
 }
+
+export function viewMessages() {
+    const store = getData();
+    return store.messages;
+}

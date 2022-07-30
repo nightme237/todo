@@ -37,7 +37,7 @@ export function createChecklist(projectId: number, name: string) {
     let projectFound = false;
 
     for (const project of store.projects) {
-        if (project.projectId === projectId) {
+        if (project.projectId == projectId ) {
             project.projectChecklists.push(checklist);
             projectFound = true;
         }

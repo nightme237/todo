@@ -2,8 +2,9 @@ import express, { response } from 'express';
 import path from 'path';
 
 import { createProject, createChecklist, createTodo } from './create';
-import { viewAllProjects, viewProject } from './view';
+import { viewAllProjects, viewProject, viewMessages } from './view';
 import { clearData } from './other';
+import { messageSend } from './message';
 
 const app = express();
 app.use(express.json());
@@ -57,6 +58,17 @@ app.get('/view/allprojects', (req, res) => {
 app.get('/view/project', (req, res) => {
     const id = parseInt(req.query.projectId as string);
     return res.json(viewProject(id));
+})
+
+/* viewMessages (for fun) */
+app.get('/view/messages', (req, res) => {
+    return res.json(viewMessages());
+})
+
+/* messageSend (for fun) */
+app.post('/message/send', (req, res) => {
+    const message = req.body.message as string;
+    return res.json(messageSend(message));
 })
 
 app.delete('/clear', (req,res) => {

@@ -26,6 +26,7 @@ export interface Data {
         checklist: number,
         todo: number,
     }
+    messages: String[],
 }
 
 let data: Data = {
@@ -36,6 +37,7 @@ let data: Data = {
         checklist: 0,
         todo: 0,
     },
+    messages: [],
 }
 
 export function getData() {

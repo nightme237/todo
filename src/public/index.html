@@ -2,10 +2,16 @@
 <html lang="en">
 
   <head>
-
-    <meta charset="UTF-8">
-    <title>Sample Site</title>
     <link rel="stylesheet" href="styling.css" />
+    <style>
+      label {
+        display: inline-block;
+        text-align: right;
+      }
+    </style>
+    <meta charset="UTF-8">
+    <title>To-dos</title>
+    
 
   </head> 
 
@@ -16,7 +22,7 @@
       var xhr = new XMLHttpRequest();
       xhr.open('POST', `http://${HOST}:${PORT}/create/project`);
       let json = JSON.stringify({
-        name: "project1",
+        name: document.getElementById("projectName").value,
       });
       xhr.responseType = 'json';
       xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
@@ -24,7 +30,7 @@
 
       xhr.onload = function() {
         let responseObj = xhr.response;
-        document.getElementById("createproject").innerHTML = "created project with projectname: project1";
+        document.getElementById("createproject").innerHTML = "created project with projectname: " + document.getElementById("projectName").value;
       };
     }
 
@@ -36,13 +42,11 @@
 
       xhr.onload = function() {
         let responseObj = xhr.response;
-        if (responseObj.projects.length !== 0) {
-          document.getElementById("projects").innerHTML = "";
-        } else {
-          document.getElementById("projects").innerHTML = "no projects found :(";
-        }
+        document.getElementById("projectList").innerHTML = "";
         for(var property in responseObj.projects) {
-          document.getElementById("projects").innerHTML += property + ": " + responseObj.projects[property].projectName + " ";
+          var node = document.createElement('li');
+          node.appendChild(document.createTextNode("projectId" + property + ": " + responseObj.projects[property].projectName));
+          document.getElementById("projectList").appendChild(node);
         } 
       };
     }
@@ -54,11 +58,58 @@
       xhr.send();
 
       xhr.onload = function() {
-        if (document.getElementById("clear").innerHTML === "Clear here!") {
+        if (document.getElementById("clear").innerHTML === "clear here!") {
           document.getElementById("clear").innerHTML = "done!";
         } else {
-          document.getElementById("clear").innerHTML = "Clear here!";
+          document.getElementById("clear").innerHTML = "clear here!";
         }
+        document.getElementById("messagelist").innerHTML = "messages appear here!";
+        document.getElementById("createproject").innerHTML = "create one!";
+        document.getElementById("projects").innerHTML = "projects appear here!";
+      };
+    }
+
+    function sendMessage() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', `http://${HOST}:${PORT}/message/send`, true);
+      let json = JSON.stringify({
+        message: document.getElementById("message").value,
+      });
+      xhr.responseType = 'json';
+      xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+      xhr.send(json);
+
+      var xhr1 = new XMLHttpRequest();
+      xhr1.open('GET', `http://${HOST}:${PORT}/view/messages`, true);
+      xhr1.responseType = 'json';
+      xhr1.send(json);
+
+      xhr1.onload = function() {
+        let responseObj = xhr1.response;
+        if (responseObj.length !== 0) {
+          document.getElementById("messagelist").innerHTML = "";
+        } else {
+          document.getElementById("messagelist").innerHTML = "no messages found :(";
+        }
+        for(var property in responseObj) {
+          document.getElementById("messagelist").innerHTML += (parseInt(property) + 1) + ": " + responseObj[property] + " ";
+        } 
+      };
+    }
+    
+    function createChecklist() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', `http://${HOST}:${PORT}/create/checklist`);
+      let json = JSON.stringify({
+        name: document.getElementById("checklistName").value,
+        projectId: document.getElementById("projectId").value,
+      });
+      xhr.responseType = 'json';
+      xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+      xhr.send(json);
+
+      xhr.onload = function() {
+        let responseObj = xhr.response;
       };
     }
   </script>
@@ -77,14 +128,32 @@
   <h1>Description</h1>
   <p class="paragraph-style">This website allows you to keep track of all the tasks you may have.</p>
 
+  <p>insert project name:</p>
+  <input type = "text" id = "projectName"/><br>
   <button onclick="createProject()">Create Project</button>
-  <p id="createproject">not done</p>
+  <p id="createproject">create one!</p>
 
   <button onclick="viewall()">View Projects</button>
-  <p id="projects">Projects Here!</p>
+  <p id="projects">projects appear here!</p>
+  <ul id="projectList">
+  </ul>
+
+  <div>
+    <label>Input ProjectId</label>
+    <input type = "number" id = "projectId"/><br>
+  </div>
+  <div>
+    <label>Input checklist name</label>
+    <input type = "text" id = "checklistName"/><br>
+  </div>
+  <button onclick="createChecklist()">Create Checklist</button>
 
   <button onclick="wipe()">Clear!</button>
-  <p id="clear">Clear here!</p>
+  <p id="clear">clear here!</p>
+
+  <input type = "text" id = "message"/> <br>
+  <button onclick="sendMessage()">send message</button>
+  <p id="messagelist">messages appear here!</p>
 
   </body>
 
