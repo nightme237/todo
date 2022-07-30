@@ -1,14 +1,17 @@
-import express from 'express';
+import express, { response } from 'express';
 import path from 'path';
 
 import { createProject, createChecklist, createTodo } from './create';
 import { viewAllProjects, viewProject } from './view';
+import { clearData } from './other';
 
 const app = express();
 app.use(express.json());
 
-const PORT = 3000;
-const HOST = "localhost";
+export const PORT = 8080;
+export const HOST = "192.168.31.86";
+
+app.use("/home", express.static(__dirname + '/public'));
 
 /* root directory */
 app.get('/', (req, res) => {
@@ -17,7 +20,7 @@ app.get('/', (req, res) => {
 
 /* test */
 app.get('/html', (req, res) => {
-    res.sendFile(path.join(__dirname, "/index.html"));
+    res.sendFile(path.join(__dirname, "public/index.html"));
 })
 
 /* echo */
@@ -54,6 +57,10 @@ app.get('/view/allprojects', (req, res) => {
 app.get('/view/project', (req, res) => {
     const id = parseInt(req.query.projectId as string);
     return res.json(viewProject(id));
+})
+
+app.delete('/clear', (req,res) => {
+    return res.json(clearData());
 })
 
 app.listen(PORT, HOST, () => {

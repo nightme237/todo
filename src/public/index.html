@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="UTF-8">
+    <title>Sample Site</title>
+    <link rel="stylesheet" href="styling.css" />
+
+  </head> 
+
+  <script type="text/javascript">
+    const PORT = 8080;
+    const HOST = "192.168.31.86";
+    function createProject() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', `http://${HOST}:${PORT}/create/project`);
+      let json = JSON.stringify({
+        name: "project1",
+      });
+      xhr.responseType = 'json';
+      xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+      xhr.send(json);
+
+      xhr.onload = function() {
+        let responseObj = xhr.response;
+        document.getElementById("createproject").innerHTML = "created project with projectname: project1";
+      };
+    }
+
+    function viewall() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', `http://${HOST}:${PORT}/view/allprojects`, true);
+      xhr.responseType = 'json';
+      xhr.send();
+
+      xhr.onload = function() {
+        let responseObj = xhr.response;
+        if (responseObj.projects.length !== 0) {
+          document.getElementById("projects").innerHTML = "";
+        } else {
+          document.getElementById("projects").innerHTML = "no projects found :(";
+        }
+        for(var property in responseObj.projects) {
+          document.getElementById("projects").innerHTML += property + ": " + responseObj.projects[property].projectName + " ";
+        } 
+      };
+    }
+
+    function wipe() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('DELETE', `http://${HOST}:${PORT}/clear`, true);
+      xhr.responseType = 'json';
+      xhr.send();
+
+      xhr.onload = function() {
+        if (document.getElementById("clear").innerHTML === "Clear here!") {
+          document.getElementById("clear").innerHTML = "done!";
+        } else {
+          document.getElementById("clear").innerHTML = "Clear here!";
+        }
+      };
+    }
+  </script>
+
+  <body>
+
+  <header>
+    <hgroup>
+      <h1>Jayson's todos</h1>
+      <h2>A new beginning</h2>
+      <nav></nav>
+    </hgroup>
+  </header>    
+
+
+  <h1>Description</h1>
+  <p class="paragraph-style">This website allows you to keep track of all the tasks you may have.</p>
+
+  <button onclick="createProject()">Create Project</button>
+  <p id="createproject">not done</p>
+
+  <button onclick="viewall()">View Projects</button>
+  <p id="projects">Projects Here!</p>
+
+  <button onclick="wipe()">Clear!</button>
+  <p id="clear">Clear here!</p>
+
+  </body>
+
+</html>
