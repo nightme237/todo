@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 
 import { createProject, createChecklist, createTodo } from './create';
 import { viewAllProjects, viewProject } from './view';
@@ -9,6 +10,17 @@ app.use(express.json());
 const PORT = 3000;
 const HOST = "localhost";
 
+/* root directory */
+app.get('/', (req, res) => {
+    return res.json("Welcome to Jayson's website!\r\nRight now its a bit barebones but the frontend is coming soon!\r\n")
+});
+
+/* test */
+app.get('/html', (req, res) => {
+    res.sendFile(path.join(__dirname, "/index.html"));
+})
+
+/* echo */
 app.get('/echo', (req, res) => {
     return res.json("hello world!");
 });

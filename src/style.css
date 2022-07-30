@@ -1,0 +1,12 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    color: black;
+    font-size: 20px;
+    line-height: 1.6;
+    text-align: center;
+    padding: 0 1rem;
+}
+
+.paragraph-style {
+    color: red;
+}
